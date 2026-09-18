@@ -1,11 +1,246 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="BD Smart Document and Photo Tools"><title>BD Smart Document & Photo Tools PRO</title><style>*{box-sizing:border-box}body{margin:0;font-family:system-ui,Arial;background:#07111f;color:#edf6ff}.wrap{max-width:1150px;margin:auto;padding:16px}.hero{padding:25px;border-radius:24px;background:linear-gradient(135deg,#10253a,#175c66);border:1px solid #2b5363}.hero h1{margin:0 0 7px}.hero p{margin:0;color:#c8dce7}.nav{display:flex;gap:7px;overflow:auto;margin:15px 0}.nav button,.btn{border:0;border-radius:11px;padding:11px 14px;cursor:pointer;font-weight:800}.nav button{background:#102236;color:#eaf5ff;border:1px solid #28435a;white-space:nowrap}.nav button.active,.btn{background:#50d4b8;color:#052018}.btn.blue{background:#36b8ec;color:#031923}.btn.dark{background:#203950;color:#edf7ff}.btn.red{background:#8a3546;color:#fff}.tab{display:none}.tab.active{display:block}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:16px}.card{background:#0e1c2c;border:1px solid #284258;border-radius:19px;padding:18px}.card h2{margin:0 0 6px}.muted{color:#92a8bb;font-size:13px}label{display:block;color:#b7cad8;font-size:13px;margin:10px 0 5px}input,select,textarea{width:100%;padding:11px;border:1px solid #2b4962;border-radius:11px;background:#081521;color:#fff}textarea{min-height:120px;resize:vertical}.row{display:flex;flex-wrap:wrap;gap:8px}.preview{margin-top:10px;min-height:190px;background:#fff;border-radius:12px;display:flex;align-items:center;justify-content:center;overflow:hidden;color:#333}.preview img{max-width:100%;max-height:360px}.out{margin-top:10px;padding:12px;border-radius:11px;background:#081521;border:1px solid #203950;word-break:break-word;line-height:1.65}.drop{padding:20px;text-align:center;border:2px dashed #3a5870;border-radius:13px;cursor:pointer;color:#9eb3c3}.drop.drag{border-color:#50d4b8;background:#12322d}.checks{display:grid;grid-template-columns:1fr 1fr;gap:7px}.check{background:#14283b;padding:9px;border-radius:9px}.check input{width:auto}.thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(85px,1fr));gap:8px;margin-top:10px}.thumb{background:#fff;padding:4px;border-radius:8px}.thumb img{width:100%;height:80px;object-fit:contain}.footer{text-align:center;color:#70869a;padding:25px;font-size:12px}@media(max-width:600px){.wrap{padding:10px}.hero{padding:20px}.hero h1{font-size:23px}.grid{grid-template-columns:1fr}.btn{flex:1;min-width:125px}}</style></head><body><div class="wrap"><header class="hero"><h1>🛠️ BD Smart Document & Photo Tools PRO</h1><p>Resize • Compress • Crop • Convert • PDF • ID Photo • Text • Print</p></header><nav class="nav"><button class="active" onclick="tab('image',this)">🖼️ Image</button><button onclick="tab('pdf',this)">📄 PDF</button><button onclick="tab('photo',this)">🪪 ID Photo</button><button onclick="tab('text',this)">📝 Text</button><button onclick="tab('file',this)">📁 File</button></nav>
-<section id="image" class="tab active"><div class="grid"><section class="card"><h2>🖼️ Resize & Compress</h2><p class="muted">Choose an image, width and quality, then download JPG.</p><div id="drop" class="drop" onclick="$('imgFile').click()">📤 Click or drag & drop an image</div><input id="imgFile" type="file" accept="image/*" hidden><div id="preview" class="preview">No image selected</div><label>Width</label><input id="width" type="number" min="1" placeholder="800"><label>Quality: <span id="qv">85</span>%</label><input id="quality" type="range" min="20" max="100" value="85" oninput="$('qv').textContent=this.value"><div class="row" style="margin-top:11px"><button class="btn" onclick="resize()">⬇️ Download JPG</button><button class="btn dark" onclick="resetImage()">Reset</button></div><div id="imageInfo" class="out">No image selected.</div></section>
-<section class="card"><h2>✂️ Crop / Rotate</h2><p class="muted">Automatic centered crop with common ratios.</p><label>Crop ratio</label><select id="ratio"><option value="free">Keep full image</option><option value="1">1:1 Square</option><option value="1.333">4:3</option><option value="1.5">3:2</option><option value="1.777">16:9</option></select><label>Rotate</label><select id="rotate"><option>0</option><option>90</option><option>180</option><option>270</option></select><button class="btn blue" style="margin-top:12px" onclick="cropRotate()">✂️ Process & Download</button></section>
-<section class="card"><h2>🎨 Brightness / Contrast</h2><p class="muted">Adjust the selected image and download it.</p><label>Brightness</label><input id="bright" type="range" min="50" max="150" value="100"><label>Contrast</label><input id="contrast" type="range" min="50" max="150" value="100"><button class="btn" style="margin-top:12px" onclick="adjust()">🎨 Apply & Download</button></section></div></section>
-<section id="pdf" class="tab"><div class="grid"><section class="card"><h2>📄 Multiple Images → PDF</h2><p class="muted">Select JPG/PNG images and create one PDF directly in the browser.</p><input id="pdfFiles" type="file" accept="image/*" multiple><div id="thumbs" class="thumbs"></div><label>Page</label><select id="page"><option value="a4">A4</option><option value="letter">Letter</option></select><label>Orientation</label><select id="orient"><option value="p">Portrait</option><option value="l">Landscape</option></select><button class="btn" style="margin-top:11px" onclick="makePDF()">📥 Create PDF</button><div id="pdfStatus" class="out"></div></section><section class="card"><h2>🖨️ Print Selected Image</h2><p class="muted">Select an image in Image first.</p><button class="btn blue" onclick="printImage()">🖨️ Print</button></section></div></section>
-<section id="photo" class="tab"><div class="grid"><section class="card"><h2>🪪 ID / Passport Photo Sheet</h2><p class="muted">Create multiple copies on a printable sheet.</p><input id="photo" type="file" accept="image/*"><label>Photo size</label><select id="psize"><option value="35x45">35 × 45 mm</option><option value="25x35">25 × 35 mm</option><option value="2x2">2 × 2 inch</option><option value="custom">Custom</option></select><div id="custom" style="display:none"><label>Width px</label><input id="cw" type="number" value="413"><label>Height px</label><input id="ch" type="number" value="531"></div><label>Copies</label><input id="copies" type="number" min="1" max="30" value="8"><button class="btn" style="margin-top:11px" onclick="photoSheet()">🪪 Create & Download</button><div id="photoPrev" class="preview">Select photo</div></section><section class="card"><h2>📐 Photo Information</h2><input id="pinfo" type="file" accept="image/*" onchange="photoInfo()"><div id="pinfoOut" class="out">No image selected.</div></section></div></section>
-<section id="text" class="tab"><div class="grid"><section class="card"><h2>📝 Text Tools</h2><textarea id="txt" placeholder="Write or paste text..."></textarea><div class="row" style="margin-top:9px"><button class="btn" onclick="fmt('upper')">UPPERCASE</button><button class="btn dark" onclick="fmt('lower')">lowercase</button><button class="btn dark" onclick="fmt('clean')">Clean Spaces</button><button class="btn blue" onclick="copy($('txt').value)">📋 Copy</button></div><label>Download name</label><input id="txtName" value="document.txt"><button class="btn" style="margin-top:9px" onclick="downloadText()">⬇️ Download TXT</button></section><section class="card"><h2>📊 Text Analyzer</h2><textarea id="analyze" oninput="analyzeText()" placeholder="Paste text..."></textarea><div id="stats" class="out">Words: 0<br>Characters: 0<br>No-space characters: 0<br>Lines: 0</div></section><section class="card"><h2>🖨️ Print Document</h2><input id="ptitle" placeholder="Document title"><textarea id="ptext" placeholder="Document text..."></textarea><button class="btn blue" style="margin-top:9px" onclick="printDoc()">🖨️ Print</button></section></div></section>
-<section id="file" class="tab"><div class="grid"><section class="card"><h2>📁 File Information</h2><input id="any" type="file" onchange="fileInfo()"><div id="anyOut" class="out">No file selected.</div></section><section class="card"><h2>🔒 Privacy</h2><p class="muted">Selected files are processed in the browser by these tools. There is no login system and no intentional upload server.</p><button class="btn red" onclick="location.reload()">Reset Page</button></section></div></section><footer class="footer">BD Smart Document & Photo Tools PRO • Single index.html</footer></div>
-<script>const $=id=>document.getElementById(id);let file=null,url=null;function tab(id,b){document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));$(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active')}function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}function bytes(n){return n<1024?n+' B':n<1048576?(n/1024).toFixed(2)+' KB':(n/1048576).toFixed(2)+' MB'}function dl(b,n){let u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=n;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000)}function copy(t){if(!t)return alert('Nothing to copy');if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(t).then(()=>alert('✓ Copied')).catch(()=>fallback(t))}else fallback(t)}function fallback(t){let x=document.createElement('textarea');x.value=t;x.style.position='fixed';x.style.left='-9999px';document.body.appendChild(x);x.select();let ok=false;try{ok=document.execCommand('copy')}catch(e){}x.remove();alert(ok?'✓ Copied':'Copy blocked; select and copy manually.')}function load(file0){if(!file0||!file0.type.startsWith('image/'))return alert('Please select an image.');file=file0;let r=new FileReader();r.onload=()=>{url=r.result;let im=new Image();im.onload=()=>{$('preview').innerHTML='<img src="'+url+'">';$('width').value=im.width;$('imageInfo').innerHTML='<b>File:</b> '+esc(file.name)+'<br><b>Size:</b> '+bytes(file.size)+'<br><b>Dimensions:</b> '+im.width+' × '+im.height+' px'};im.src=url};r.readAsDataURL(file)}$('imgFile').onchange=e=>load(e.target.files[0]);$('drop').ondragover=e=>{e.preventDefault();$('drop').classList.add('drag')};$('drop').ondragleave=()=>$('drop').classList.remove('drag');$('drop').ondrop=e=>{e.preventDefault();$('drop').classList.remove('drag');load(e.dataTransfer.files[0])};function canvasImage(cb){if(!url)return alert('Select an image first.');let im=new Image();im.onload=()=>cb(im);im.src=url}function resize(){canvasImage(im=>{let w=Math.max(1,Number($('width').value)||im.width),h=Math.round(im.height*w/im.width),c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(im,0,0,w,h);c.toBlob(b=>dl(b,'bd-image.jpg'),'image/jpeg',Number($('quality').value)/100)})}function cropRotate(){canvasImage(im=>{let w=im.width,h=im.height,r=$('ratio').value;if(r!=='free'){r=Number(r);if(w/h>r)w=Math.round(h*r);else h=Math.round(w/r)}let sx=(im.width-w)/2,sy=(im.height-h)/2,rot=Number($('rotate').value),ow=rot%180?w? h:w:w,oh=rot%180?w:h,c=document.createElement('canvas');c.width=ow;c.height=oh;let x=c.getContext('2d');x.translate(ow/2,oh/2);x.rotate(rot*Math.PI/180);x.drawImage(im,sx,sy,w,h,-w/2,-h/2,w,h);c.toBlob(b=>dl(b,'bd-crop-rotate.jpg'),'image/jpeg',.92)})}function adjust(){canvasImage(im=>{let c=document.createElement('canvas');c.width=im.width;c.height=im.height;let x=c.getContext('2d');x.filter='brightness('+$('bright').value+'%) contrast('+$('contrast').value+'%)';x.drawImage(im,0,0);c.toBlob(b=>dl(b,'bd-adjusted.jpg'),'image/jpeg',.92)})}function resetImage(){file=null;url=null;$('imgFile').value='';$('preview').textContent='No image selected';$('imageInfo').textContent='No image selected.'}
-let pdfData=[];$('pdfFiles').onchange=e=>{pdfData=[];$('thumbs').innerHTML='';Array.from(e.target.files).filter(f=>f.type.startsWith('image/')).forEach(f=>{let r=new FileReader();r.onload=()=>{pdfData.push(r.result);let d=document.createElement('div');d.className='thumb';d.innerHTML='<img src="'+r.result+'">';$('thumbs').appendChild(d)};r.readAsDataURL(f)})};async function jpeg(data){return new Promise(res=>{let im=new Image();im.onload=()=>{let c=document.createElement('canvas');c.width=im.naturalWidth;c.height=im.naturalHeight;c.getContext('2d').drawImage(im,0,0);c.toBlob(async b=>res({b:new Uint8Array(await b.arrayBuffer()),w:im.naturalWidth,h:im.naturalHeight}),'image/jpeg',.92)};im.src=data})}async function makePDF(){if(!pdfData.length)return alert('Select images first.');$('pdfStatus').textContent='Creating PDF...';try{let E=new TextEncoder(),chunks=[],pos=0,offs=[],n=3,add=b=>{chunks.push(b);pos+=b.length},obj=(i,s)=>{offs[i]=pos;add(E.encode(i+' 0 obj\n'+s+'\nendobj\n'))};add(E.encode('%PDF-1.4\n%\xE2\xE3\xCF\xD3\n'));let pages=[];for(let d of pdfData){let j=await jpeg(d),io=n++,co=n++,po=n++,W=$('page').value==='letter'?612:595,H=$('page').value==='letter'?792:842;if($('orient').value==='l'){let z=W;W=H;H=z}let sc=Math.min((W-36)/j.w,(H-36)/j.h),dw=j.w*sc,dh=j.h*sc,x=(W-dw)/2,y=(H-dh)/2,content='q\n'+dw.toFixed(2)+' 0 0 '+dh.toFixed(2)+' '+x.toFixed(2)+' '+y.toFixed(2)+' cm\n/Im0 Do\nQ\n';offs[io]=pos;add(E.encode(io+' 0 obj\n<< /Type /XObject /Subtype /Image /Width '+j.w+' /Height '+j.h+' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length '+j.b.length+' >>\nstream\n'));add(j.b);add(E.encode('\nendstream\nendobj\n'));obj(co,'<< /Length '+E.encode(content).length+' >>\nstream\n'+content+'endstream');obj(po,'<< /Type /Page /Parent 2 0 R /MediaBox [0 0 '+W+' '+H+'] /Resources << /XObject << /Im0 '+io+' 0 R >> >> /Contents '+co+' 0 R >>');pages.push(po+' 0 R')}obj(1,'<< /Type /Catalog /Pages 2 0 R >>');obj(2,'<< /Type /Pages /Kids ['+pages.join(' ')+'] /Count '+pages.length+' >>');let x=pos;add(E.encode('xref\n0 '+n+'\n0000000000 65535 f \n'));for(let i=1;i<n;i++)add(E.encode(String(offs[i]||0).padStart(10,'0')+' 00000 n \n'));add(E.encode('trailer\n<< /Size '+n+' /Root 1 0 R >>\nstartxref\n'+x+'\n%%EOF'));dl(new Blob(chunks,{type:'application/pdf'}),'bd-images.pdf');$('pdfStatus').textContent='✓ PDF downloaded.'}catch(e){console.error(e);$('pdfStatus').textContent='PDF failed. Try normal JPG/PNG files.'}}
-$('photo').onchange=e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>$('photoPrev').innerHTML='<img src="'+r.result+'">';r.readAsDataURL(f)};$('psize').onchange=()=>{$('custom').style.display=$('psize').value==='custom'?'block':'none'};function photoSheet(){let f=$('photo').files[0];if(!f)return alert('Select a photo first.');let r=new FileReader();r.onload=()=>{let im=new Image();im.onload=()=>{let s=$('psize').value,w,h;if(s==='35x45'){w=413;h=531}else if(s==='25x35'){w=295;h=413}else if(s==='2x2'){w=600;h=600}else{w=Number($('cw').value);h=Number($('ch').value)}let copies=Math.max(1,Math.min(30,Number($('copies').value)||8)),cols=4,g=18,m=25,rows=Math.ceil(copies/cols),c=document.createElement('canvas');c.width=cols*w+(cols-1)*g+m*2;c.height=rows*h+(rows-1)*g+m*2;let x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);for(let i=0;i<copies;i++){let col=i%cols,row=Math.floor(i/cols);x.drawImage(im,m+col*(w+g),m+row*(h+g),w,h)}c.toBlob(b=>dl(b,'bd-id-photo-sheet.jpg'),'image/jpeg',.95)};im.src=r.result};r.readAsDataURL(f)}function photoInfo(){let f=$('pinfo').files[0];if(!f)return;let r=new FileReader();r.onload=()=>{let im=new Image();im.onload=()=>$('pinfoOut').innerHTML='<b>File:</b> '+esc(f.name)+'<br><b>Dimensions:</b> '+im.width+' × '+im.height+' px<br><b>300 DPI approx:</b> '+(im.width/300).toFixed(2)+' × '+(im.height/300).toFixed(2)+' inch<br><b>Size:</b> '+bytes(f.size);im.src=r.result};r.readAsDataURL(f)}function fmt(t){let x=$('txt');if(t==='upper')x.value=x.value.toUpperCase();if(t==='lower')x.value=x.value.toLowerCase();if(t==='clean')x.value=x.value.replace(/[ \t]+/g,' ').replace(/\n{3,}/g,'\n\n').trim()}function downloadText(){let t=$('txt').value;if(!t.trim())return alert('Write something first.');let n=$('txtName').value.trim()||'document.txt';if(!n.toLowerCase().endsWith('.txt'))n+='.txt';dl(new Blob([t],{type:'text/plain;charset=utf-8'}),n)}function analyzeText(){let t=$('analyze').value,w=t.trim()?t.trim().split(/\s+/).length:0;$('stats').innerHTML='Words: '+w.toLocaleString()+'<br>Characters: '+t.length.toLocaleString()+'<br>No-space characters: '+t.replace(/\s/g,'').length.toLocaleString()+'<br>Lines: '+(t?t.split(/\n/).length:0)}function printDoc(){let t=$('ptext').value;if(!t.trim())return alert('Write document first.');let w=window.open('','_blank');if(!w)return alert('Allow popups.');w.document.write('<html><head><title>'+esc($('ptitle').value||'Document')+'</title><style>body{font-family:Arial;max-width:800px;margin:40px auto;line-height:1.7}h1{border-bottom:2px solid #222}</style></head><body><h1>'+esc($('ptitle').value||'Document')+'</h1><div>'+esc(t).replace(/\n/g,'<br>')+'</div></body></html>');w.document.close();setTimeout(()=>w.print(),300)}function printImage(){if(!url)return alert('Select an image first.');let w=window.open('','_blank');if(!w)return alert('Allow popups.');w.document.write('<html><head><title>Print Image</title><style>body{margin:0;display:flex;align-items:center;justify-content:center;min-height:100vh}img{max-width:95vw;max-height:95vh}</style></head><body><img src="'+url+'"></body></html>');w.document.close();setTimeout(()=>w.print(),300)}function fileInfo(){let f=$('any').files[0];if(!f)return;$('anyOut').innerHTML='<b>Name:</b> '+esc(f.name)+'<br><b>Type:</b> '+esc(f.type||'Unknown')+'<br><b>Size:</b> '+bytes(f.size)+'<br><b>Modified:</b> '+new Date(f.lastModified).toLocaleString()}</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#07111f">
+<title> Smart Document & Photo Tools — Advanced Live</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:#07111f;color:#eef5ff}
+header{padding:22px 18px;background:linear-gradient(135deg,#0d1d34,#102a48);border-bottom:1px solid #24415f}
+h1{margin:0;font-size:24px}header p{margin:6px 0 0;color:#9fb6ce}
+.app{max-width:1250px;margin:auto;padding:16px}
+.tabs{display:flex;gap:8px;overflow:auto;margin-bottom:14px}.tab{border:1px solid #294762;background:#102238;color:#dcecff;padding:11px 15px;border-radius:12px;cursor:pointer;white-space:nowrap}.tab.active{background:#1677ff;border-color:#4d9aff}
+.panel{display:none}.panel.active{display:block}
+.card{background:#0c1a2b;border:1px solid #223d58;border-radius:16px;padding:15px;margin-bottom:14px;box-shadow:0 8px 28px #0004}
+.grid{display:grid;grid-template-columns:310px 1fr;gap:15px}.controls{display:grid;gap:10px}
+label{font-size:13px;color:#a9bfd5}input,select,textarea,button{font:inherit}input[type=range]{width:100%}
+button,.file{border:0;border-radius:10px;padding:10px 13px;background:#1677ff;color:white;cursor:pointer}.secondary{background:#1b3047}.danger{background:#b72d43}
+.file{display:block;text-align:center}.file input{display:none}
+.row{display:flex;gap:8px;flex-wrap:wrap}.value{float:right;color:#74b2ff}
+.canvasbox{width:100%;min-height:520px;height:70vh;background:#050b13;border:1px dashed #31506d;border-radius:14px;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:12px}
+canvas{display:block;max-width:100%;max-height:100%;width:100%;height:100%;object-fit:contain;background:#fff;box-shadow:0 0 0 1px #29415a}
+.preview-card{min-width:0}
+.preview-card .canvasbox canvas{width:100%;height:100%;object-fit:contain}
+.status{font-size:12px;color:#91a9c0;margin-top:8px}
+textarea{width:100%;min-height:300px;background:#07111f;color:#eaf3ff;border:1px solid #294762;border-radius:12px;padding:12px;resize:vertical}
+input[type=text],input[type=number],select{width:100%;background:#07111f;color:white;border:1px solid #294762;border-radius:9px;padding:9px}
+h2{font-size:18px;margin-top:0}.pill{display:inline-block;padding:5px 9px;border-radius:20px;background:#12314f;color:#8fc5ff;font-size:12px}
+.small{font-size:12px;color:#9bb0c4}
+.saved-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin:14px 0}
+.saved-item{background:#07111f;border:1px solid #294762;border-radius:14px;overflow:hidden}
+.saved-preview{height:180px;background:#02070d;display:flex;align-items:center;justify-content:center;overflow:hidden;border-bottom:1px solid #294762}
+.saved-preview img{width:100%;height:100%;object-fit:contain}
+.saved-doc-preview{width:100%;height:100%;padding:12px;white-space:pre-wrap;overflow:hidden;color:#dcecff;font-size:12px;line-height:1.45}
+.saved-info{padding:10px}.saved-title{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.saved-meta{font-size:11px;color:#8fa8c0;margin:4px 0 8px}.saved-actions{display:flex;gap:6px;flex-wrap:wrap}.saved-actions button{padding:7px 9px;font-size:12px}
+@media(max-width:600px){.saved-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}.saved-preview{height:145px}}.saved{border-left:3px solid #2e9dff;padding-left:10px}
+@media(max-width:850px){.grid{grid-template-columns:1fr}.canvasbox{min-height:360px;height:55vh;padding:8px}}
+</style>
+</head>
+<body>
+<header><div class="app"><h1> Smart Document & Photo Tools</h1><p>Advanced Live Editor • Resize • ID Photo • Documents • Local Save</p></div></header>
+<main class="app">
+<div class="tabs">
+<button class="tab active" data-tab="editor">🎨 Live Editor</button>
+<button class="tab" data-tab="resize">📐 Live Resize</button>
+<button class="tab" data-tab="id">🪪 Live ID Photo</button>
+<button class="tab" data-tab="doc">📄 Live Document</button>
+<button class="tab" data-tab="saved">💾 Saved Files</button>
+</div>
+
+<section id="editor" class="panel active">
+<div class="grid">
+<div class="card controls">
+<h2>Live Editing</h2>
+<label class="file">📷 Choose Photo<input id="imgInput" type="file" accept="image/*"></label>
+<label>Brightness <span class="value" id="brightnessV">100%</span><input id="brightness" type="range" min="0" max="200" value="100"></label>
+<label>Contrast <span class="value" id="contrastV">100%</span><input id="contrast" type="range" min="0" max="200" value="100"></label>
+<label>Saturation <span class="value" id="saturationV">100%</span><input id="saturation" type="range" min="0" max="200" value="100"></label>
+<label>Blur <span class="value" id="blurV">0px</span><input id="blur" type="range" min="0" max="12" value="0"></label>
+<label>Crop <span class="value" id="cropV">100%</span><input id="crop" type="range" min="25" max="100" value="100"></label>
+<label>Rotation <span class="value" id="rotationV">0°</span><input id="rotation" type="range" min="-180" max="180" value="0"></label>
+<div class="row">
+<button id="gray">Grayscale</button><button id="sepia" class="secondary">Sepia</button>
+<button id="fh" class="secondary">↔ Flip H</button><button id="fv" class="secondary">↕ Flip V</button>
+</div>
+<div class="row"><button id="saveEdit">💾 Save Live Edit</button><button id="downloadEdit">⬇ Download</button><button id="resetEdit" class="danger">Reset</button></div>
+<div class="status" id="editStatus">No photo selected.</div>
+</div>
+<div class="card preview-card"><div class="canvasbox"><canvas id="editCanvas"></canvas></div></div>
+</div>
+</section>
+
+<section id="resize" class="panel">
+<div class="grid">
+<div class="card controls">
+<h2>Live Resize</h2>
+<label class="file">🖼️ Select Image<input id="resizeInput" type="file" accept="image/*"></label>
+<label>Width (px)<input id="rw" type="number" min="1" value="800"></label>
+<label>Height (px)<input id="rh" type="number" min="1" value="800"></label>
+<label><input id="lock" type="checkbox" checked> Keep aspect ratio</label>
+<div class="row"><button id="resizeSave">💾 Save Resize</button><button id="resizeDownload">⬇ Download</button></div>
+<div class="status">Preview updates immediately as dimensions change.</div>
+</div>
+<div class="card preview-card"><div class="canvasbox"><canvas id="resizeCanvas"></canvas></div></div>
+</div>
+</section>
+
+<section id="id" class="panel">
+<div class="grid">
+<div class="card controls">
+<h2>Live ID / Passport Sheet</h2>
+<label class="file">🪪 Select Photo<input id="idInput" type="file" accept="image/*"></label>
+<label>Photo Width (mm)<input id="idw" type="number" value="35" min="10"></label>
+<label>Photo Height (mm)<input id="idh" type="number" value="45" min="10"></label>
+<label>Columns<input id="cols" type="number" value="4" min="1" max="10"></label>
+<label>Rows<input id="rows" type="number" value="5" min="1" max="15"></label>
+<label>Gap (mm)<input id="gap" type="number" value="3" min="0"></label>
+<div class="row"><button id="idSave">💾 Save ID Sheet</button><button id="idDownload">⬇ Download</button><button id="idPrint" class="secondary">🖨 Print</button></div>
+<div class="status">The sheet is generated live from the selected dimensions.</div>
+</div>
+<div class="card preview-card"><div class="canvasbox"><canvas id="idCanvas"></canvas></div></div>
+</div>
+</section>
+
+<section id="doc" class="panel">
+<div class="card">
+<h2>Live Document Editor <span class="pill">Auto-save in browser</span></h2>
+<div class="row">
+<input id="docName" type="text" placeholder="Document name">
+<button id="docNew">New</button><button id="docSave">💾 Save Document</button><button id="docDownload">⬇ TXT</button><button id="docPrint" class="secondary">🖨 Print</button>
+</div>
+<br>
+<textarea id="docText" placeholder="Type or paste your document here... Changes are saved locally automatically."></textarea>
+<div class="status" id="docStatus">Not saved yet.</div>
+</div>
+</section>
+
+<section id="saved" class="panel">
+<div class="card">
+<h2>💾 Saved Files</h2>
+<p class="small">Every saved photo, resize, ID sheet and document appears here with a preview.</p>
+<div class="row"><button class="secondary" onclick="filterSaved('all')">All</button><button class="secondary" onclick="filterSaved('image')">Photos</button><button class="secondary" onclick="filterSaved('Document')">Documents</button></div>
+<div id="savedList" class="saved-gallery"></div>
+<button id="clearSaved" class="danger">Delete All Local Saves</button>
+</div>
+</section>
+</main>
+
+<script>
+const $=id=>document.getElementById(id);
+let editImg=null,resizeImg=null,idImg=null;
+let state={brightness:100,contrast:100,saturation:100,blur:0,crop:100,rotation:0,gray:false,sepia:false,fh:false,fv:false};
+
+function tabs(){
+ document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));b.classList.add('active');$(b.dataset.tab).classList.add('active');if(b.dataset.tab==='saved')renderSaved();});
+}
+tabs();
+
+function readImage(file,cb){if(!file)return;let r=new FileReader();r.onload=e=>{let im=new Image();im.onload=()=>cb(im);im.src=e.target.result};r.readAsDataURL(file)}
+
+$('imgInput').onchange=e=>readImage(e.target.files[0],im=>{editImg=im;state={brightness:100,contrast:100,saturation:100,blur:0,crop:100,rotation:0,gray:false,sepia:false,fh:false,fv:false};syncSliders();drawEdit()});
+document.querySelectorAll('#editor input[type=range]').forEach(x=>x.oninput=()=>{state[x.id]=+x.value;updateLabels();drawEdit()});
+function syncSliders(){['brightness','contrast','saturation','blur','crop','rotation'].forEach(k=>$(k).value=state[k]);updateLabels()}
+function updateLabels(){[['brightness','%'],['contrast','%'],['saturation','%'],['blur','px'],['crop','%'],['rotation','°']].forEach(([k,u])=>$(k+'V').textContent=state[k]+u)}
+$('gray').onclick=()=>{state.gray=!state.gray;$('gray').classList.toggle('secondary',!state.gray);drawEdit()}
+$('sepia').onclick=()=>{state.sepia=!state.sepia;$('sepia').classList.toggle('secondary',!state.sepia);drawEdit()}
+$('fh').onclick=()=>{state.fh=!state.fh;drawEdit()}
+$('fv').onclick=()=>{state.fv=!state.fv;drawEdit()}
+function drawEdit(){
+ if(!editImg)return;
+ const c=$('editCanvas'),ctx=c.getContext('2d');
+ const pct=state.crop/100;
+ const iw=editImg.naturalWidth, ih=editImg.naturalHeight;
+ const cw=Math.max(1,Math.round(iw*pct)), ch=Math.max(1,Math.round(ih*pct));
+ const sx=Math.round((iw-cw)/2), sy=Math.round((ih-ch)/2);
+ const rad=((state.rotation%360)+360)%360*Math.PI/180;
+ const quarter=(Math.abs(((state.rotation%360)+360)%360-90)<1 || Math.abs(((state.rotation%360)+360)%360-270)<1);
+ c.width=quarter?ch:cw;
+ c.height=quarter?cw:ch;
+ ctx.clearRect(0,0,c.width,c.height);
+ ctx.save();
+ ctx.translate(c.width/2,c.height/2);
+ ctx.rotate(rad);
+ ctx.scale(state.fh?-1:1,state.fv?-1:1);
+ ctx.filter=`brightness(${state.brightness}%) contrast(${state.contrast}%) saturate(${state.saturation}%) blur(${state.blur}px)${state.gray?' grayscale(100%)':''}${state.sepia?' sepia(100%)':''}`;
+ ctx.drawImage(editImg,sx,sy,cw,ch,-cw/2,-ch/2,cw,ch);
+ ctx.restore();
+ ctx.filter='none';
+ $('editStatus').textContent=`Live preview: ${c.width} × ${c.height}px • Full photo/frame preview`;
+}
+$('resetEdit').onclick=()=>{if(!editImg)return;state={brightness:100,contrast:100,saturation:100,blur:0,crop:100,rotation:0,gray:false,sepia:false,fh:false,fv:false};syncSliders();drawEdit()};
+function canvasData(c){return c.toDataURL('image/jpeg',.92)}
+function saveItem(type,name,data,meta={}){
+ let a=JSON.parse(localStorage.getItem('BD_SAVED')||'[]');
+ a.unshift({id:Date.now()+Math.floor(Math.random()*1000),type,name:name||type,data,meta});
+ try{localStorage.setItem('BD_SAVED',JSON.stringify(a));renderSaved();return true}
+ catch(e){alert('Browser storage is full. Delete old saved files and try again.');return false}
+}
+$('saveEdit').onclick=()=>{if(editImg){saveItem('Live Edit','Edited Photo '+new Date().toLocaleString(),canvasData($('editCanvas')),state);$('editStatus').textContent='Saved locally ✓'}};
+$('downloadEdit').onclick=()=>{if(editImg)download(canvasData($('editCanvas')),'BD-Live-Edited.jpg')};
+
+$('resizeInput').onchange=e=>readImage(e.target.files[0],im=>{resizeImg=im;$('rw').value=im.width;$('rh').value=im.height;drawResize()});
+$('rw').oninput=()=>{if($('lock').checked&&resizeImg)$('rh').value=Math.max(1,Math.round(+$('rw').value*resizeImg.height/resizeImg.width));drawResize()};
+$('rh').oninput=()=>{if($('lock').checked&&resizeImg)$('rw').value=Math.max(1,Math.round(+$('rh').value*resizeImg.width/resizeImg.height));drawResize()};
+$('lock').onchange=()=>drawResize();
+function drawResize(){if(!resizeImg)return;let c=$('resizeCanvas'),ctx=c.getContext('2d');c.width=+$('rw').value;c.height=+$('rh').value;ctx.drawImage(resizeImg,0,0,c.width,c.height)}
+$('resizeSave').onclick=()=>{if(resizeImg)saveItem('Resize','Resized Image '+new Date().toLocaleString(),canvasData($('resizeCanvas')),{width:$('rw').value,height:$('rh').value})};
+$('resizeDownload').onclick=()=>{if(resizeImg)download(canvasData($('resizeCanvas')),'BD-Resized.jpg')};
+
+$('idInput').onchange=e=>readImage(e.target.files[0],im=>{idImg=im;drawID()});
+['idw','idh','cols','rows','gap'].forEach(k=>$(k).oninput=drawID);
+function drawID(){if(!idImg)return;let dpi=96/25.4,c=$('idCanvas'),w=+$('idw').value*dpi,h=+$('idh').value*dpi,g=+$('gap').value*dpi,cols=+$('cols').value,rows=+$('rows').value;c.width=Math.ceil(cols*w+(cols-1)*g);c.height=Math.ceil(rows*h+(rows-1)*g);let ctx=c.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);for(let y=0;y<rows;y++)for(let x=0;x<cols;x++){let px=x*(w+g),py=y*(h+g),ir=idImg.width/idImg.height,tr=w/h,sw,sh,sx,sy;if(ir>tr){sh=idImg.height;sw=sh*tr;sx=(idImg.width-sw)/2;sy=0}else{sw=idImg.width;sh=sw/tr;sx=0;sy=(idImg.height-sh)/2}ctx.drawImage(idImg,sx,sy,sw,sh,px,py,w,h)}}
+$('idSave').onclick=()=>{if(idImg)saveItem('ID Photo','ID Sheet '+new Date().toLocaleString(),canvasData($('idCanvas')),{width:$('idw').value,height:$('idh').value,cols:$('cols').value,rows:$('rows').value})};
+$('idDownload').onclick=()=>{if(idImg)download(canvasData($('idCanvas')),'BD-ID-Photo-Sheet.jpg')};
+$('idPrint').onclick=()=>printImage(canvasData($('idCanvas')));
+
+let docTimer;
+$('docText').oninput=()=>{clearTimeout(docTimer);docTimer=setTimeout(()=>{localStorage.setItem('BD_LIVE_DOC',$('docText').value);$('docStatus').textContent='Auto-saved locally • '+new Date().toLocaleTimeString()},300)};
+$('docSave').onclick=()=>{saveItem('Document',$('docName').value||'Document '+new Date().toLocaleString(),$('docText').value);$('docStatus').textContent='Document saved locally ✓'};
+$('docNew').onclick=()=>{$('docName').value='';$('docText').value='';localStorage.removeItem('BD_LIVE_DOC');$('docStatus').textContent='New document'};
+$('docDownload').onclick=()=>{let n=$('docName').value||'BD-Document';download('data:text/plain;charset=utf-8,'+encodeURIComponent($('docText').value),n+'.txt')};
+$('docPrint').onclick=()=>{let w=window.open('','_blank');w.document.write('<!doctype html><html><head><title>Print Document</title><style>body{font-family:Arial;padding:35px;white-space:pre-wrap}<\/style></head><body>'+escapeHtml($('docText').value)+'</body></html>');w.document.close();w.print()};
+function escapeHtml(s){return s.replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
+function printImage(data){let w=window.open('','_blank');w.document.write('<html><body style="margin:0;text-align:center"><img style="max-width:100%" src="'+data+'"></body></html>');w.document.close();w.onload=()=>w.print()}
+function download(data,name){let a=document.createElement('a');a.href=data;a.download=name;document.body.appendChild(a);a.click();a.remove()}
+
+let savedFilter='all';
+function filterSaved(type){savedFilter=type;renderSaved()}
+function renderSaved(){
+ const all=JSON.parse(localStorage.getItem('BD_SAVED')||'[]');
+ const a=savedFilter==='all'?all:(savedFilter==='image'?all.filter(x=>x.type!=='Document'):all.filter(x=>x.type===savedFilter));
+ const box=$('savedList');
+ if(!a.length){box.innerHTML='<div class="small">No saved files yet.</div>';return}
+ box.innerHTML=a.map(x=>{
+   const doc=x.type==='Document';
+   const preview=doc?`<div class="saved-doc-preview">${escapeHtml(String(x.data||'').slice(0,1000))||'Empty document'}</div>`:`<img src="${x.data}" alt="Saved photo">`;
+   return `<article class="saved-item"><div class="saved-preview">${preview}</div><div class="saved-info">
+   <div class="saved-title" title="${escapeHtml(x.name)}">${escapeHtml(x.name)}</div>
+   <div class="saved-meta">${escapeHtml(x.type)} • ${new Date(x.id).toLocaleString()}</div>
+   <div class="saved-actions"><button onclick="openSaved(${x.id})">Open</button><button class="secondary" onclick="downloadSaved(${x.id})">Download</button><button class="danger" onclick="deleteSaved(${x.id})">Delete</button></div>
+   </div></article>`;
+ }).join('');
+}
+window.openSaved=id=>{
+ const x=JSON.parse(localStorage.getItem('BD_SAVED')||'[]').find(z=>z.id===id); if(!x)return;
+ if(x.type==='Document'){
+   $('docName').value=x.name;$('docText').value=x.data;
+   document.querySelector('[data-tab=doc]').click();
+   $('docStatus').textContent='Saved document opened ✓';
+ }else{
+   const w=window.open('','_blank');w.document.write('<html><body style="margin:0;background:#111;height:100vh;display:flex;align-items:center;justify-content:center"><img style="max-width:100%;max-height:100%;object-fit:contain" src="'+x.data+'"></body></html>');w.document.close();
+ }
+};
+window.downloadSaved=id=>{
+ const x=JSON.parse(localStorage.getItem('BD_SAVED')||'[]').find(z=>z.id===id);if(!x)return;
+ if(x.type==='Document')download('data:text/plain;charset=utf-8,'+encodeURIComponent(x.data),safeName(x.name)+'.txt');
+ else download(x.data,safeName(x.name)+'.jpg');
+};
+window.deleteSaved=id=>{localStorage.setItem('BD_SAVED',JSON.stringify(JSON.parse(localStorage.getItem('BD_SAVED')||'[]').filter(x=>x.id!==id)));renderSaved()};
+function safeName(s){return String(s).replace(/[^\w-]+/g,'_').slice(0,80)||'BD-Saved'}
+
+$('clearSaved').onclick=()=>{if(confirm('Delete all locally saved files?')){localStorage.removeItem('BD_SAVED');renderSaved()}};
+(function(){let d=localStorage.getItem('BD_LIVE_DOC');if(d){$('docText').value=d;$('docStatus').textContent='Recovered auto-saved document ✓'}renderSaved()})();
+</script>
+</body>
+</html>
